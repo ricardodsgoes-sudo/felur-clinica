@@ -16,6 +16,7 @@ logo png.png
 # ── Backups / fontes grandes não necessárias no deploy ──
 assets/video/hero_original.mp4
 assets/video/README.txt
+assets/img/
 
 # ── Sistema ──
 Thumbs.db
