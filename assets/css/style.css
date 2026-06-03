@@ -2791,7 +2791,7 @@ a.contact-info-item:hover .contact-info-dot {
 }
 
 .contact-photo-row img:first-child {
-  object-position: center 20%;
+  object-position: center top;
 }
 
 .contact-photo-row img:nth-child(2) {
