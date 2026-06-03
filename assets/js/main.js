@@ -235,11 +235,13 @@
   }
 
   /* ── HERO VIDEO ──────────────────────────────────────────────
-     Desktop: vídeo em loop. Mobile/touch: toca uma vez (sem loop).
-     Reduced-motion: fica só o poster. */
+     Desktop: vídeo em loop. Mobile/touch: NÃO reproduz — fica só o poster
+     (a descodificação do vídeo durante o scroll travava telemóveis mais
+     fracos). O poster é o 1.º frame, por isso o aspeto mantém-se.
+     Reduced-motion: também fica só o poster. */
   const heroVideo = document.querySelector('.home-hero-media .hero-video');
-  if (heroVideo && !prefersReducedMotion) {
-    heroVideo.loop = !isTouch;            // loop apenas no desktop
+  if (heroVideo && !prefersReducedMotion && !isTouch) {
+    heroVideo.loop = true;                // loop no desktop
     heroVideo.querySelectorAll('source[data-src]').forEach((s) => {
       s.src = s.getAttribute('data-src');
     });

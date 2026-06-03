@@ -1445,12 +1445,17 @@ section { padding: var(--sp-12) 0; }
 
 .services-template .site-header {
   position: sticky;
+  top: 0;
   background: rgba(251, 248, 242, 0.68);
   backdrop-filter: blur(18px) saturate(1.5);
   -webkit-backdrop-filter: blur(18px) saturate(1.5);
   box-shadow: none;
   border-bottom: 1px solid rgba(229, 221, 207, 0.65);
   transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  /* promove a barra a camada própria de GPU: o blur fica estável e a navbar
+     acompanha o scroll sem tremer (bug clássico de sticky + backdrop no iOS) */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .services-template .site-header.scrolled {
@@ -4017,11 +4022,14 @@ a.footer-contact-item:hover {
    estáticos. O aspeto mantém-se: o glow atrás dos cards já está
    pré-desfocado (filter no ::before) e o header fica opaco/legível. */
 @media (max-width: 980px) {
-  .services-template .site-header,
-  .services-template .site-header.scrolled {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    background: rgba(251, 248, 242, 0.96);
+  /* Navbar glass também no mobile, mas blur mais leve e já promovido a
+     camada própria (regra base) → acompanha o scroll sem tremer. Os cards
+     glass abaixo é que continuam SEM blur ao vivo: são muitos e era esse
+     custo por-frame que travava o arrastar. */
+  .services-template .site-header {
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    backdrop-filter: blur(12px) saturate(1.4);
+    background: rgba(251, 248, 242, 0.74);
   }
 
   .about-mini-grid article,
