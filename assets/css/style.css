@@ -3070,6 +3070,9 @@ a.contact-info-item:hover .contact-info-dot {
 @media (max-width: 980px) {
   .home-hero {
     min-height: clamp(420px, 68vh, 560px);
+    /* svh = viewport pequeno (com barra do browser visível): estável,
+       não recalcula quando a barra recolhe ao arrastar → sem salto */
+    min-height: clamp(420px, 68svh, 560px);
   }
 
   .home-hero-copy {
@@ -3084,6 +3087,7 @@ a.contact-info-item:hover .contact-info-dot {
 @media (max-width: 520px) {
   .home-hero {
     min-height: 78vh;
+    min-height: 78svh;
     align-items: flex-end;
     padding-bottom: 2.4rem;
   }
@@ -3627,8 +3631,8 @@ a.contact-info-item:hover .contact-info-dot {
     display: inline-flex !important;
     position: fixed;
     top: 11px;
-    right: auto;
-    left: min(calc(100vw - 58px), 328px);
+    left: auto;
+    right: 16px;
     z-index: 120;
     width: 42px;
     height: 42px;
@@ -4029,6 +4033,18 @@ a.footer-contact-item:hover {
   /* parallax já desativado no JS; garante imagens sem transform residual */
   [data-parallax] {
     transform: none !important;
+    will-change: auto;
+  }
+
+  /* Mobile: o will-change permanente em dezenas de .reveal criava camadas
+     de GPU a mais → scroll a engasgar/tremer. No telemóvel as entradas
+     ainda animam, mas sem promover camada fixa (o ganho de suavidade no
+     arrastar compensa largamente). */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .testi-track {
     will-change: auto;
   }
 }

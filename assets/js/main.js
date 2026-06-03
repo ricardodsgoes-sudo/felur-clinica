@@ -373,7 +373,7 @@
 
       // Build WhatsApp message with form data
       const waText = encodeURIComponent(
-        `Olá! Vim através do site da Felur Clínica.\n\nNome: ${name}\nTelefone: ${phone}\nServiço: ${service}${message ? '\nMensagem: ' + message : ''}`
+        `Olá! Vim através do site da Félur Clínica.\n\nNome: ${name}\nTelefone: ${phone}\nServiço: ${service}${message ? '\nMensagem: ' + message : ''}`
       );
       const waUrl = `https://wa.me/351964145114?text=${waText}`;
 
