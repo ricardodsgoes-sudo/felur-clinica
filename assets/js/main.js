@@ -6,6 +6,9 @@
   'use strict';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Touch/mobile: scroll nativo (sem smooth-scroll JS) e sem vídeo de fundo,
+  // para o arrastar não travar em telemóveis.
+  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   let lenis = null;
 
   function createFallbackSmoothScroller() {
@@ -72,7 +75,7 @@
     };
   }
 
-  if (!prefersReducedMotion && typeof window.Lenis === 'function') {
+  if (!prefersReducedMotion && !isTouch && typeof window.Lenis === 'function') {
     lenis = new window.Lenis({
       duration: 1.35,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -88,7 +91,7 @@
 
     requestAnimationFrame(raf);
     window.felurLenis = lenis;
-  } else if (!prefersReducedMotion) {
+  } else if (!prefersReducedMotion && !isTouch) {
     lenis = createFallbackSmoothScroller();
     window.felurLenis = lenis;
   }
@@ -231,11 +234,17 @@
     updateParallax();
   }
 
-  /* ── HERO VIDEO (respect reduced motion) ─────────────────── */
+  /* ── HERO VIDEO — só desktop ─────────────────────────────────
+     No mobile/touch (ou reduced-motion) fica o poster: poupa ~1.3 MB
+     e evita o decode do vídeo a competir com o scroll. */
   const heroVideo = document.querySelector('.home-hero-media .hero-video');
-  if (heroVideo && prefersReducedMotion) {
-    heroVideo.removeAttribute('autoplay');
-    heroVideo.pause();
+  if (heroVideo && !prefersReducedMotion && !isTouch) {
+    heroVideo.querySelectorAll('source[data-src]').forEach((s) => {
+      s.src = s.getAttribute('data-src');
+    });
+    heroVideo.load();
+    const playing = heroVideo.play();
+    if (playing && typeof playing.catch === 'function') playing.catch(() => {});
   }
 
   /* ── PAGE TRANSITION (consistent fade in/out) ────────────── */
