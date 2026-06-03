@@ -234,11 +234,12 @@
     updateParallax();
   }
 
-  /* ── HERO VIDEO — só desktop ─────────────────────────────────
-     No mobile/touch (ou reduced-motion) fica o poster: poupa ~1.3 MB
-     e evita o decode do vídeo a competir com o scroll. */
+  /* ── HERO VIDEO ──────────────────────────────────────────────
+     Desktop: vídeo em loop. Mobile/touch: toca uma vez (sem loop).
+     Reduced-motion: fica só o poster. */
   const heroVideo = document.querySelector('.home-hero-media .hero-video');
-  if (heroVideo && !prefersReducedMotion && !isTouch) {
+  if (heroVideo && !prefersReducedMotion) {
+    heroVideo.loop = !isTouch;            // loop apenas no desktop
     heroVideo.querySelectorAll('source[data-src]').forEach((s) => {
       s.src = s.getAttribute('data-src');
     });
