@@ -196,9 +196,13 @@
   requestAnimationFrame(initialReveal);
   window.addEventListener('load', () => requestAnimationFrame(initialReveal));
 
-  /* ── PARALLAX (depth on scroll) ──────────────────────────── */
+  /* ── PARALLAX (depth on scroll) — só desktop ─────────────────
+     No mobile/touch o recálculo por frame (getBoundingClientRect +
+     transform/scale) trava o arrastar; desativado por isso. */
   const parallaxEls = Array.from(document.querySelectorAll('[data-parallax]'));
-  if (parallaxEls.length && !prefersReducedMotion) {
+  const allowParallax = window.matchMedia('(min-width: 981px)').matches
+                     && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (parallaxEls.length && !prefersReducedMotion && allowParallax) {
     let ticking = false;
 
     const updateParallax = () => {
