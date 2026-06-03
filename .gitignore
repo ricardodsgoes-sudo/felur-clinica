@@ -16,7 +16,6 @@ logo png.png
 # ── Backups / fontes grandes não necessárias no deploy ──
 assets/video/hero_original.mp4
 assets/video/README.txt
-assets/img/
 
 # ── Sistema ──
 Thumbs.db
@@ -37,3 +36,7 @@ img instagram/*
 !img instagram/imgi_48_619255795_17986335620923824_8541178476821061561_n.webp
 !img instagram/imgi_49_528078338_17892592221292870_7048691238606747814_n.webp
 !img instagram/imgi_53_522639098_17891091714292870_4099283433199598161_n.webp
+!img instagram/imgi_21_558044024_122108559411003218_6193242294833788515_n.webp
+!img instagram/imgi_39_361638613_18045554839479024_5092859221177252451_n.webp
+!img instagram/imgi_40_359826346_18044935453479024_4480243197398087759_n.webp
+!img instagram/imgi_44_529725394_693945233810246_6114204377172161079_n.webp

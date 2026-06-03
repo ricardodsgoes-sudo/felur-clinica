@@ -467,4 +467,48 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); }, { once: true });
   }
 
+  /* ── WORK CAROUSEL (Casos e detalhes reais) ──────────────── */
+  document.querySelectorAll('[data-work-carousel]').forEach((carousel) => {
+    const track = carousel.querySelector('.work-track');
+    if (!track) return;
+    const prev = carousel.querySelector('.work-prev');
+    const next = carousel.querySelector('.work-next');
+
+    const step = () => {
+      const first = track.querySelector('img');
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return first ? first.getBoundingClientRect().width + gap : track.clientWidth;
+    };
+    const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+
+    let timer = null;
+    const delay = parseInt(carousel.getAttribute('data-autoplay'), 10) || 0;
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+    const start = () => {
+      if (delay > 0 && !prefersReducedMotion) { stop(); timer = setInterval(() => go(1), delay); }
+    };
+    const restart = () => { stop(); start(); };
+
+    const go = (dir) => {
+      if (dir > 0 && atEnd()) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else if (dir < 0 && track.scrollLeft <= 4) {
+        track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: dir * step(), behavior: 'smooth' });
+      }
+    };
+
+    if (prev) prev.addEventListener('click', () => { go(-1); restart(); });
+    if (next) next.addEventListener('click', () => { go(1); restart(); });
+
+    carousel.addEventListener('mouseenter', stop);
+    carousel.addEventListener('mouseleave', start);
+    carousel.addEventListener('focusin', stop);
+    carousel.addEventListener('focusout', start);
+    track.addEventListener('touchstart', stop, { passive: true });
+
+    start();
+  });
+
 })();
