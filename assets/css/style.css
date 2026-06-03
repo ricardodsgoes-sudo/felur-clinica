@@ -1811,6 +1811,10 @@ section { padding: var(--sp-12) 0; }
   box-shadow: var(--shadow-img);
 }
 
+.work-track img.img-rotate-180 {
+  transform: rotate(180deg);
+}
+
 .work-arrow {
   position: absolute;
   top: 50%;
@@ -2302,7 +2306,9 @@ a.footer-contact-item:hover {
 }
 
 .about-hero-media img:first-child {
+  object-fit: contain;
   object-position: center 18%;
+  background: #FFFFFF;
 }
 
 .about-hero-media img:last-child {
@@ -2439,7 +2445,9 @@ a.footer-contact-item:hover {
   z-index: 2;
   width: 58%;
   height: 290px;
-  object-position: center;
+  object-fit: contain;
+  object-position: center top;
+  background: #FFFFFF;
 }
 
 .about-detail {
@@ -2853,16 +2861,9 @@ a.contact-info-item:hover .contact-info-dot {
   width: 100%;
   height: 160px;
   object-fit: cover;
+  object-position: center;
   border-radius: 12px;
   box-shadow: 0 14px 24px rgba(58, 51, 42, 0.08);
-}
-
-.contact-photo-row img:first-child {
-  object-position: center top;
-}
-
-.contact-photo-row img:nth-child(2) {
-  object-position: center;
 }
 
 @media (max-width: 1024px) {
