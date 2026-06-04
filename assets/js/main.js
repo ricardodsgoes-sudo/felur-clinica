@@ -6,8 +6,8 @@
   'use strict';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Touch/mobile: scroll nativo (sem smooth-scroll JS) e sem vídeo de fundo,
-  // para o arrastar não travar em telemóveis.
+  // Touch/mobile: scroll nativo (sem smooth-scroll JS) para o arrastar não
+  // travar. O vídeo do hero toca 1x e é pausado fora do ecrã (ver HERO VIDEO).
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   let lenis = null;
 
@@ -235,19 +235,38 @@
   }
 
   /* ── HERO VIDEO ──────────────────────────────────────────────
-     Desktop: vídeo em loop. Mobile/touch: NÃO reproduz — fica só o poster
-     (a descodificação do vídeo durante o scroll travava telemóveis mais
-     fracos). O poster é o 1.º frame, por isso o aspeto mantém-se.
-     Reduced-motion: também fica só o poster. */
+     Desktop: vídeo em loop. Mobile/touch: toca uma vez (sem loop).
+     Para o scroll não travar em telemóveis mais fracos, o vídeo é PAUSADO
+     quando o hero sai do ecrã (deixa de descodificar durante o resto do
+     scroll) e retomado se voltar a aparecer. Reduced-motion: fica só o poster. */
   const heroVideo = document.querySelector('.home-hero-media .hero-video');
-  if (heroVideo && !prefersReducedMotion && !isTouch) {
-    heroVideo.loop = true;                // loop no desktop
+  if (heroVideo && !prefersReducedMotion) {
+    heroVideo.loop = !isTouch;            // loop no desktop; mobile toca 1x
     heroVideo.querySelectorAll('source[data-src]').forEach((s) => {
       s.src = s.getAttribute('data-src');
     });
     heroVideo.load();
-    const playing = heroVideo.play();
-    if (playing && typeof playing.catch === 'function') playing.catch(() => {});
+
+    const tryPlay = () => {
+      const p = heroVideo.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+    tryPlay();
+
+    // pausa quando o hero sai do ecrã → poupa CPU/GPU no resto do scroll
+    const heroSection = heroVideo.closest('.home-hero') || heroVideo;
+    if ('IntersectionObserver' in window) {
+      const heroIO = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (heroVideo.paused && !heroVideo.ended) tryPlay();
+          } else if (!heroVideo.paused) {
+            heroVideo.pause();
+          }
+        });
+      }, { threshold: 0.15 });
+      heroIO.observe(heroSection);
+    }
   }
 
   /* ── PAGE TRANSITION (consistent fade in/out) ────────────── */
