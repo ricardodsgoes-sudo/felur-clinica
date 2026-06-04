@@ -1455,10 +1455,6 @@ section { padding: var(--sp-12) 0; }
   box-shadow: none;
   border-bottom: 1px solid rgba(229, 221, 207, 0.65);
   transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-  /* promove a barra a camada própria de GPU: o blur fica estável e a navbar
-     acompanha o scroll sem tremer (bug clássico de sticky + backdrop no iOS) */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 
 .services-template .site-header.scrolled {

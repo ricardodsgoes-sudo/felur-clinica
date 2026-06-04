@@ -8,7 +8,13 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // Touch/mobile: scroll nativo (sem smooth-scroll JS) para o arrastar não
   // travar. O vídeo do hero toca 1x e é pausado fora do ecrã (ver HERO VIDEO).
-  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  // Deteção robusta de toque: o Android (sobretudo o Samsung Internet) reporta
+  // muitas vezes `(hover: hover)`/`(pointer: fine)` por engano, o que fazia o
+  // Lenis arrancar e sequestrar o scroll por toque (preso/treme/sombra fantasma).
+  // `any-pointer: coarse` deteta a presença de toque mesmo nesses casos.
+  const isTouch = window.matchMedia('(any-pointer: coarse)').matches
+               || ('ontouchstart' in window)
+               || navigator.maxTouchPoints > 0;
   let lenis = null;
 
   function createFallbackSmoothScroller() {
