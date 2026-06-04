@@ -4082,20 +4082,22 @@ a.footer-contact-item:hover {
    estáticos. O aspeto mantém-se: o glow atrás dos cards já está
    pré-desfocado (filter no ::before) e o header fica opaco/legível. */
 @media (max-width: 980px) {
-  /* Navbar glass também no mobile, mas blur mais leve e já promovido a
-     camada própria (regra base) → acompanha o scroll sem tremer. Os cards
-     glass abaixo é que continuam SEM blur ao vivo: são muitos e era esse
-     custo por-frame que travava o arrastar. */
-  .services-template .site-header {
-    -webkit-backdrop-filter: blur(12px) saturate(1.4);
-    backdrop-filter: blur(12px) saturate(1.4);
-    background: rgba(251, 248, 242, 0.74);
+  /* MOBILE: ZERO blur ao vivo (backdrop-filter). Num header fixo/sticky o
+     live-blur re-desfoca o fundo a cada frame de scroll → é a causa
+     principal do "tremer/travar" em telemóveis. A navbar passa a opaca
+     (o glass mantém-se no desktop). Cards e botões do hero também sem blur. */
+  .services-template .site-header,
+  .services-template .site-header.scrolled {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(251, 248, 242, 0.97);
   }
 
   .about-mini-grid article,
-  .template-service-card {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+  .template-service-card,
+  .home-hero .btn-outline {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 
   /* parallax já desativado no JS; garante imagens sem transform residual */
